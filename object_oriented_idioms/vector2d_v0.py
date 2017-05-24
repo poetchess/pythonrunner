@@ -4,9 +4,19 @@ import math
 class Vector2d:
     typecode = 'd'
 
+    # Use exactly two leading underscores to make an attribute private
     def __init__(self, x, y):
-        self.x = float(x)
-        self.y = float(y)
+        self.__x = float(x)
+        self.__y = float(y)
+
+    @property
+    def x(self):
+        return self.__x
+
+    # @property decorator marks the getter method of a property
+    @property
+    def y(self):
+        return self.__y
 
     def __iter__(self):
         return (i for i in (self.x, self.y))
@@ -25,17 +35,14 @@ class Vector2d:
     def __eq__(self, other):
         return tuple(self) == tuple(other)
 
+    def __hash__(self):
+        return hash(self.x) ^ hash(self.y)
+
     def __abs__(self):
         return math.hypot(self.x, self.y)
 
     def __bool__(self):
         return bool(abs(self))
-
-    @classmethod
-    def frombytes(cls, octets):
-        typecode = chr(octets[0])
-        memv = memoryview(octets[1:]).cast(typecode)
-        return cls(*memv)
 
     def __format__(self, fmt_spec=''):
         if fmt_spec.endswith('p'):
@@ -50,6 +57,13 @@ class Vector2d:
 
     def angle(self):
         return math.atan2(self.y, self.x)
+
+    @classmethod
+    def frombytes(cls, octets):
+        typecode = chr(octets[0])
+        memv = memoryview(octets[1:]).cast(typecode)
+        return cls(*memv)
+
 
 if __name__ =='__main__':
     v1 = Vector2d(3, 4)
