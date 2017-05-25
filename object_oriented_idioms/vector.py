@@ -40,5 +40,8 @@ class Vector:
 
 if __name__ =='__main__':
     v1 = Vector(range(3, 10))
+    print('repr:')
     print(repr(v1))
+    print('str')
+    print(v1)
 
