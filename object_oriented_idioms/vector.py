@@ -1,6 +1,7 @@
 from array import array
 import reprlib
 import math
+import numbers
 
 class Vector:
     typecode = 'd'
@@ -32,6 +33,21 @@ class Vector:
     def __bool__(self):
         return bool(abs(self))
 
+    # Adding __len__ and __getitem__ to support len(v) and v[i]
+    #   as well as slicing
+    def __len__(self):
+        return len(self._components)
+
+    def __getitem__(self, index):
+        cls = type(self)
+        if isinstance(index, slice):
+            return cls(self._components[index])
+        elif isinstance(index, numbers.Integral):
+            return self._components[index]
+        else:
+            msg = '{cls.__name__} indices must be integers'
+            raise TypeError(msg.format(cls=cls))
+
     @classmethod
     def frombytes(cls, octets):
         typecode = chr(octets[0])
@@ -39,9 +55,18 @@ class Vector:
         return cls(memv)
 
 if __name__ =='__main__':
-    v1 = Vector(range(3, 10))
+    v1 = Vector(range(6))
     print('repr:')
     print(repr(v1))
     print('str')
     print(v1)
+
+    print('Testing slicing:')
+
+    # stop at index 9, not a problem. slice object will be passed to array
+    #   and array will use slice.indices() to normalize it.
+    print(repr(v1[3:9]))
+    print(repr(v1[3]))
+    print(repr(v1[::3]))
+    print(repr(v1[-1:]))
 
