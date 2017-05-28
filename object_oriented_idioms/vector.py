@@ -2,6 +2,8 @@ from array import array
 import reprlib
 import math
 import numbers
+import functools
+import operator
 
 class Vector:
     typecode = 'd'
@@ -24,8 +26,39 @@ class Vector:
         return (bytes([ord(self.typecode)]) +
                 bytes(self._components))
 
+    '''
+    # For a large multidimensional vector, this method is very inefficient.
+    # It builds two tuples copying the entire contents of the operands just
+    #   to use the __eq__ of the tuple type.
     def __eq__(self, other):
         return tuple(self) == tuple(other)
+    '''
+
+    '''
+    def __eq__(self, other):
+        if len(self) != len(other):
+            return false
+        # zip produces a generator of tuples made from the items in each
+        #   iterable argument. It stops producing values without warning
+        #   as soon as one of the inputs is exhausted.
+        for a, b in zip(self, other):
+            if a != b:
+                return False
+        return True
+    '''
+
+    # Same logic as above, less code.
+    def __eq__(self, other):
+        return len(self) == len(other) and \
+            all(a==b for a, b in zip(self, other))
+
+    def __hash__(self):
+        # A perfect example of a map-reduce computation
+        hashes = (hash(x) for x in self._components)
+        # When using reduce, it's a good pratice to provide the third
+        #   argument. It will be the value returned if the sequence is
+        #   empty and is used as the first argument in reducing loop.
+        return functools.reduce(operator.xor, hashes, 0)
 
     def __abs__(self):
         return math.sqrt(sum(x * x for x in self))
@@ -102,3 +135,5 @@ if __name__ =='__main__':
     print(repr(v1[::3]))
     print(repr(v1[-1:]))
 
+    print(hash(v1))
+    print(v1 == Vector(range(5)))
