@@ -49,9 +49,13 @@ class Vector:
     '''
 
     # Same logic as above, less code.
+    # No meaning to allow Vector([1.0, 2.0, 3.0]) == tuple(1, 2, 3)
     def __eq__(self, other):
-        return len(self) == len(other) and \
-            all(a==b for a, b in zip(self, other))
+        if isinstance(other, Vector):
+            return len(self) == len(other) and \
+                all(a==b for a, b in zip(self, other))
+        else:
+            return NotImplemented
 
     def __hash__(self):
         # A perfect example of a map-reduce computation
@@ -63,6 +67,54 @@ class Vector:
 
     def __abs__(self):
         return math.sqrt(sum(x * x for x in self))
+
+    '''
+        Special methods implementing unary or infix operators should never change
+        their operands. Expressions with such operators are expected to produce
+        results by creating new objects. Only augmented assignment operators may
+        change the first operand (self).
+    '''
+    # special method for the '-' unary operator
+    # returns a new instance
+    def __neg__(self):
+        return Vector(-x for x in self)
+
+    # special method for the '+' unary operator
+    # returns a new instance
+    def __pos__(self):
+        return Vector(self)
+
+    # if two vector instances are of different length, fill out shorter one
+    #   with zeros.
+    # Can be called with any iterable that produces numbers.
+    #   (i.e. Vector2d, tuplei, ...)
+    # In the spirit of duck typing, we refrain from testing the type of the
+    #   'other' operand, or the type of its elements. We'll catch the exception
+    #   and return NotImplemented. This way, we leave the door open for the
+    #   implementor of the other operand type to perform the operation when
+    #   Python tries the reversed method call.
+    def __add__(self, other):
+        try :
+            # pairs is a generator that will produce tuples (a, b)
+            pairs = itertools.zip_longest(self, other, fillvalue=0.0)
+            # returns a new instance
+            return Vector(a + b for a, b in pairs)
+        except TypeError:
+            return NotImplemented
+
+    def __radd__(self, other):
+        # delegating to __add__
+        return self + other
+
+    def __mul__(self, scalar):
+        # goose typing, check the type of scalar against the numbers.Real ABC
+        if isinstance(scalar, numbers.Real):
+            return Vector(n * scalar for n in self)
+        else:
+            return NotImplemented
+
+    def __rmul__(self, scalar):
+        return self * scalar
 
     def __bool__(self):
         return bool(abs(self))
