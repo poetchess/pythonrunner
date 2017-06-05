@@ -25,3 +25,8 @@ Ways to check whether an object x is iterable:
     __getitem__ method, while the Iteable ABC does not.
 
 
+Relationship between iterables and iterators:
+---------------------------------------------
+    iterable: Any object from which the iter built-in function can obtain an
+              iterator.
+    Python obtains iterators from iterables.
