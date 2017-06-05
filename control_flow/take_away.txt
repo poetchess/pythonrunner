@@ -1,0 +1,27 @@
+Why sequences are iterable:
+---------------------------
+
+  Whenever the interpreter needs to iterate over an object x, it automatically
+  calls iter(x).
+
+  The iter built-in function:
+  1. Checks whether the object implements __iter__, and calls that to obtain
+     an iterator.
+  2. If __iter__ is not implemented, but __getitem__ is implemented, Python
+     creates an iterator that attemps to fetch items in order, starting from
+     index 0.
+  3. If that fails, Python raises TypeError, usually saying "C object is not
+     iterable", where C is the class of the targer object.
+
+  Therefore, Python sequences are iterable: they all implemente __getitem__.
+
+
+Ways to check whether an object x is iterable:
+----------------------------------------------
+
+    As of Python 3.4, the most accurate way is to call iter(x) and handle a
+    TypeError exception if it isn't. This is more accurate than using
+    isinstance(x, abc.Iterable), because iter(x) also considers the legacy
+    __getitem__ method, while the Iteable ABC does not.
+
+
