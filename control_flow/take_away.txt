@@ -44,8 +44,12 @@ Whether an object x is an iterator:
 Relationship between iterables and iterators:
 ---------------------------------------------
     Iterable: Any object from which the iter built-in function can obtain an
-              iterator.
+    iterator.
+              
     Python obtains iterators from iterables.
 
+    An iterable should never act as an iterator over itself. That is, iterables
+    must implement __iter__, but not __next__. On the other hand, for convenience,
+    iterators should be iterable. An iterator's __iter__ should just return self.
 
-
+    
