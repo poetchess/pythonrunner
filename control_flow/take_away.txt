@@ -53,3 +53,14 @@ Relationship between iterables and iterators:
     iterators should be iterable. An iterator's __iter__ should just return self.
 
     
+What is a generator function:
+-----------------------------
+    Any Python function that has the 'yield' keyword in its body is a generator function.
+    When called, it returns a generator object. That is, a generator function is a
+    generator factory.
+
+    A generator function builds a generator object that wraps the body of the function.
+    When the function body returns, the enclosing generator object raises StopIteration,
+    in accordance with the Iterator protocol.
+
+
