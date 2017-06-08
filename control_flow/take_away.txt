@@ -13,7 +13,7 @@ Why sequences are iterable:
   3. If that fails, Python raises TypeError, usually saying "C object is not
      iterable", where C is the class of the targer object.
 
-  Therefore, Python sequences are iterable since they all implemente __getitem__.
+  Therefore, Python sequences are iterable since they all implement __getitem__.
 
 
 Whether an object x is iterable:
