@@ -64,3 +64,7 @@ What is a generator function:
     in accordance with the Iterator protocol.
 
 
+What is a generator expression:
+-------------------------------
+    A generator expression is a factory of generators. It is syntactic sugar: it
+    can always be replaced by a generator function, but sometimes is more convenient.
