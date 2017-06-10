@@ -1,2 +1,2 @@
 # pythonrunner
-Code with comment for Learning Python 5th Edition
+Learning Python following the excellent book: Fluent Python.
