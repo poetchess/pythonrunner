@@ -1,0 +1,27 @@
+What is a coroutine:
+--------------------
+    A coroutine is syntactically like a generator: just a function with the
+    'yield' keyword in its body. However, in a coroutine, yield usually appears
+    on the right side of an expression, and it may or may not produce a value -
+    if there is no expression after the yield keyword, the generator yields None.
+    The coroutine may receive data from the caller, which uses .send(data) instead
+    of next(...) to feed the coroutine.
+
+    'yield' is a control flow device that can be used to implement cooperative
+    multitasking: each coroutine yields control to a central scheduler so that
+    other coroutines can be activated.
+
+
+What the state is the coroutine in:
+-----------------------------------
+    A coroutine can be in one of four states. We can determine the current state
+    using the inspect.getgeneratorstate() function, which returns one of the 
+    following strings: 'GEN_CREATED', 'GEN_RUNNING', 'GEN_SUSPENDED', 'GEN_CLOSED'
+
+
+What does 'priming' the coroutine mean:
+---------------------------------------
+    The initial call next(my_coro) is often described as 'priming' the coroutine.
+    It will advance to the first yield to make it ready for use as a live coroutine.
+    
+
