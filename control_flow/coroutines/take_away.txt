@@ -12,8 +12,8 @@ What is a coroutine:
     other coroutines can be activated.
 
 
-What the state is the coroutine in:
------------------------------------
+What is the current state of a coroutine:
+-----------------------------------------
     A coroutine can be in one of four states. We can determine the current state
     using the inspect.getgeneratorstate() function, which returns one of the 
     following strings: 'GEN_CREATED', 'GEN_RUNNING', 'GEN_SUSPENDED', 'GEN_CLOSED'
@@ -24,4 +24,14 @@ What does 'priming' the coroutine mean:
     The initial call next(my_coro) is often described as 'priming' the coroutine.
     It will advance to the first yield to make it ready for use as a live coroutine.
     
+
+How do we control the execution of a coroutine:
+-----------------------------------------------
+    There are several methods of a generator function:
+    generator.__next__()
+    generator.send(value)
+    generator.throw(type[, value[, traceback]])
+    generator.close()
+
+
 
