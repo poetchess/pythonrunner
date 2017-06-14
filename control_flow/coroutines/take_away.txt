@@ -34,4 +34,17 @@ How do we control the execution of a coroutine:
     generator.close()
 
 
+What is the concept of yield from:
+----------------------------------
+    yield from can be used to open a bidirectional channel from the outermost caller
+    to the innermost subgenerator, so that values can be sent and yielded back and
+    forth directly from them, and exceptions can be thrown all the way in without
+    adding a lot of exception handling code in intermediate coroutines. This enables
+    coroutine delegation in a new way.
 
+
+What are the components of the yield from construct:
+----------------------------------------------------
+    delegating generator: The generator function that contains the yield from <iterable> expression.
+    subgenerator: The generator obtained from the <iterable> part of the yield from expression.
+    caller/client: Client code that calls the delegating generator.

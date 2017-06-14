@@ -16,19 +16,44 @@ def averager():
         average = total / count
     return Result(count, average)
 
+
 # The delegating generator
 def grouper(results, key):
     while True:
+        # Whenever grouper is sent a value, it's piped into the averager instance
+        # by the yield from. grouper will be suspended here as long as the averager
+        # instance is consuming values sent by the client. When an averager instance
+        # runs to the end, the value it returns is bound to result[key]. The while
+        # loop then proceeds to create another averager instance to consume more
+        # values.
         results[key] = yield from averager()
+
 
 # The client, a.k.a the caller
 def main(data):
     results = {}
+
     for key, values in data.items():
+
         group = grouper(results, key)
+
+        # Prime the grouper delegating generator, which enters its while loop
+        # and suspends at the yield from, after calling the subgenerator averager.
         next(group)
+
         for value in values:
+            # Send each value into the grouper. That value ends up in the
+            # term = yield line of averager; grouper never has a chance to see it.
             group.send(value)
+
+        # Here the execution loops back to the top of the outer for loop, a new
+        # grouper instance is created and bound to `group`. The previous grouper
+        # instance is garbage collected together with its own unfinished averager
+        # subgenerator instance.
+
+        # Sending None into grouper causes the current averager instance to terminate,
+        # and allows grouper to run again, which creates another averager for the next
+        # group of values.
         group.send(None)
 
     # print(results)
