@@ -1,5 +1,6 @@
 import asyncio
 import collections
+import concurrent
 
 import aiohttp
 from aiohttp import web
@@ -45,7 +46,28 @@ def download_one(cc, base_url, semaphore, verbose):
     except Exception as exc:
         raise FetchError(cc) from exc
     else:
-        save_flag(image, cc.lower() + '.gif')
+
+        '''
+        exception calling callback for <Future at 0x7f0ba2434710 state=finished returned NoneType>
+        Traceback (most recent call last):
+        File "/usr/lib/python3.5/concurrent/futures/_base.py", line 297, in _invoke_callbacks
+            callback(self)
+        File "/usr/lib/python3.5/asyncio/futures.py", line 442, in _call_set_state
+            dest_loop.call_soon_threadsafe(_set_state, destination, source)
+        File "/usr/lib/python3.5/asyncio/base_events.py", line 532, in call_soon_threadsafe
+            handle = self._call_soon(callback, args)
+        File "/usr/lib/python3.5/asyncio/base_events.py", line 506, in _call_soon
+            self._check_closed()
+        File "/usr/lib/python3.5/asyncio/base_events.py", line 334, in _check_closed
+            raise RuntimeError('Event loop is closed')
+        RuntimeError: Event loop is closed
+        '''
+        # Bug filed at https://github.com/python/asyncio/issues/258
+        # Workaround at https://stackoverflow.com/questions/32598231/asyncio-runtimeerror-event-loop-is-closed
+        loop = asyncio.get_event_loop()
+        executor = concurrent.futures.ThreadPoolExecutor(5)
+        loop.set_default_executor(executor)
+        loop.run_in_executor(None, save_flag, image, cc.lower() + '.gif')
         status = HTTPStatus.ok
         msg = 'OK'
 
