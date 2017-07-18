@@ -69,9 +69,9 @@ class Event(DbRecord):
     # venue is a property, it builds a key from the venue_serial attribute, and
     # passes it to the fetch class method, inherited from DbRecord. We should not
     # use self.fetch(key) because if even a single event record had a key named
-    # 'fetch', the within that specific Event instance, the referenced self.fetch
+    # 'fetch', then within that specific Event instance, the referenced self.fetch
     # would retrieve the value of that field, instead of the 'fetch' class method,
-    # which is subtle bug.
+    # which is a subtle bug.
     @property
     def venue(self):
         key = 'venue.{}'.format(self.venue_serial)
